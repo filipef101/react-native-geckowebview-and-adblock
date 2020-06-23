@@ -1,3 +1,6 @@
+# PR's Welcomed
+
+
 # react-native-geckowebview-and-adblock
 
 Forked from [react-native-geckowebview-and-adblock](https://github.com/sunnylqm/react-native-geckoview)
@@ -75,3 +78,6 @@ android {
   }
 }  
 ```
+
+### Does this send a X-requested-with header like normal webview?
+No! This means a website cannot detect that it is a webview by looking for that header (will look to add custom UA if requested).
