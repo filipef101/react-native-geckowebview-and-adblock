@@ -3,9 +3,9 @@
 
 # react-native-geckowebview-and-adblock
 
-Forked from [react-native-geckowebview-and-adblock](https://github.com/sunnylqm/react-native-geckoview)
+Forked from [react-native-geckoview](https://github.com/sunnylqm/react-native-geckoview)
 
-Based on [GeckoView](https://github.com/mozilla/geckoview). Just a proof of concept.
+Based on [GeckoView](https://github.com/mozilla/geckoview).
 
 run `yarn add https://github.com/filipef101/react-native-geckowebview-and-adblock`
 
@@ -37,6 +37,13 @@ allprojects {
 
 3. `$ yarn android`
 
+
+
+This adds arround 50 mb to your app size,
+
+This doesn't support builds with aab right now, it's an issue with gecko.
+
+To avoid 200mb increase in your app you should set the gradle setting enableSeparateBuildPerCPUArchitecture to true
 
 ## Usage
 ```javascript
