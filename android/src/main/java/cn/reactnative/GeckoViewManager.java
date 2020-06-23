@@ -1,5 +1,6 @@
 package cn.reactnative;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import org.mozilla.geckoview.GeckoRuntime;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoView;
+import org.mozilla.geckoview.WebExtension;
 
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -32,7 +34,6 @@ public class GeckoViewManager extends SimpleViewManager<View> {
         return REACT_CLASS;
     }
 
-
     @Override
     public View createViewInstance(ThemedReactContext c) {
         GeckoView view = new GeckoView(c);
@@ -40,11 +41,17 @@ public class GeckoViewManager extends SimpleViewManager<View> {
         if (mGeckoRuntime == null) {
             mGeckoRuntime = GeckoRuntime.create(c);
         }
+
+        mGeckoRuntime.getWebExtensionController().installBuiltIn("resource://android/assets/signed/").exceptionally(ex -> {
+            Log.e("MyActivity", "Could not register WebExtension", ex);
+            return null;
+        });
+
         session.open(mGeckoRuntime);
+
         view.setSession(session);
         view.setLayoutParams(
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT));
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         return view;
     }
 
@@ -55,53 +62,30 @@ public class GeckoViewManager extends SimpleViewManager<View> {
 
             if (source.hasKey("html")) {
                 String html = source.getString("html");
-//                String baseUrl = source.hasKey("baseUrl") ? source.getString("baseUrl") : "";
+                // String baseUrl = source.hasKey("baseUrl") ? source.getString("baseUrl") : "";
                 session.loadString(html, HTML_MIME_TYPE);
                 return;
             }
             if (source.hasKey("uri")) {
                 String url = source.getString("uri");
                 /*
-                String previousUrl = view.getUrl();
-                if (previousUrl != null && previousUrl.equals(url)) {
-                    return;
-                }
-                if (source.hasKey("method")) {
-                    String method = source.getString("method");
-                    if (method.equalsIgnoreCase(HTTP_METHOD_POST)) {
-                        byte[] postData = null;
-                        if (source.hasKey("body")) {
-                            String body = source.getString("body");
-                            try {
-                                postData = body.getBytes("UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                postData = body.getBytes();
-                            }
-                        }
-                        if (postData == null) {
-                            postData = new byte[0];
-                        }
-                        view.postUrl(url, postData);
-                        return;
-                    }
-                }
-                HashMap<String, String> headerMap = new HashMap<>();
-                if (source.hasKey("headers")) {
-                    ReadableMap headers = source.getMap("headers");
-                    ReadableMapKeySetIterator iter = headers.keySetIterator();
-                    while (iter.hasNextKey()) {
-                        String key = iter.nextKey();
-                        if ("user-agent".equals(key.toLowerCase(Locale.ENGLISH))) {
-                            if (view.getSettings() != null) {
-                                view.getSettings().setUserAgentString(headers.getString(key));
-                            }
-                        } else {
-                            headerMap.put(key, headers.getString(key));
-                        }
-                    }
-                }
-                view.loadUrl(url, headerMap);
-                */
+                 * String previousUrl = view.getUrl(); if (previousUrl != null &&
+                 * previousUrl.equals(url)) { return; } if (source.hasKey("method")) { String
+                 * method = source.getString("method"); if
+                 * (method.equalsIgnoreCase(HTTP_METHOD_POST)) { byte[] postData = null; if
+                 * (source.hasKey("body")) { String body = source.getString("body"); try {
+                 * postData = body.getBytes("UTF-8"); } catch (UnsupportedEncodingException e) {
+                 * postData = body.getBytes(); } } if (postData == null) { postData = new
+                 * byte[0]; } view.postUrl(url, postData); return; } } HashMap<String, String>
+                 * headerMap = new HashMap<>(); if (source.hasKey("headers")) { ReadableMap
+                 * headers = source.getMap("headers"); ReadableMapKeySetIterator iter =
+                 * headers.keySetIterator(); while (iter.hasNextKey()) { String key =
+                 * iter.nextKey(); if ("user-agent".equals(key.toLowerCase(Locale.ENGLISH))) {
+                 * if (view.getSettings() != null) {
+                 * view.getSettings().setUserAgentString(headers.getString(key)); } } else {
+                 * headerMap.put(key, headers.getString(key)); } } } view.loadUrl(url,
+                 * headerMap);
+                 */
                 session.loadUri(url);
                 return;
             }

@@ -15,7 +15,8 @@ def DEFAULT_BUILD_TOOLS_VERSION = '28.0.3'
 def DEFAULT_MIN_SDK_VERSION = 16
 def DEFAULT_TARGET_SDK_VERSION = 28
 // https://maven.mozilla.org/?prefix=maven2/org/mozilla/geckoview/geckoview/
-def DEFAULT_GECKOVIEW_VERSION = '72.0.20200107212822'
+def DEFAULT_GECKOVIEW_VERSION = '79.0.20200622093309'
+def DEFAULT_GECKOVIEW_CHANNEL = 'nightly'
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
@@ -55,6 +56,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        targetCompatibility = 1.8
+        sourceCompatibility = 1.8
+    }
 }
 
 repositories {
@@ -74,9 +79,10 @@ repositories {
 
 dependencies {
     def geckoviewVersion = safeExtGet('geckoviewVersion', DEFAULT_GECKOVIEW_VERSION)
+    def geckoviewChannel = safeExtGet('geckoviewVersion', DEFAULT_GECKOVIEW_CHANNEL)
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation "org.mozilla.geckoview:geckoview:${geckoviewVersion}"
+    implementation "org.mozilla.geckoview:geckoview-${geckoviewChannel}:${geckoviewVersion}"
 }
 
 def configureReactNativePom(def pom) {

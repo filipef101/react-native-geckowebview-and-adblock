@@ -4,7 +4,13 @@ Forked from [react-native-geckowebview-and-adblock](https://github.com/sunnylqm/
 
 Based on [GeckoView](https://github.com/mozilla/geckoview). Just a proof of concept.
 
+run `yarn add https://github.com/filipef101/react-native-geckowebview-and-adblock`
+
+Not published on npm
+
 Android only
+
+Autolinking
 
 ## Getting started
 
